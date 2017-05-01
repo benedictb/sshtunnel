@@ -15,7 +15,7 @@ class ClientConnection(Protocol):
         self.q = DeferredQueue()
 
     def connectionMade(self):
-        reactor.listenTCP(DATA_PORT, DataHomeConnectionFactory())
+        reactor.listenTCP(DATA_PORT, DataHomeConnectionFactory(self))
         self.cmd.transport.write('start data connection')
 
     def dataReceived(self, data):

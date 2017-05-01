@@ -2,13 +2,15 @@ from twisted.internet.protocol import ClientFactory, Factory
 from twisted.internet.protocol import Protocol
 from twisted.internet import reactor
 from data_connection import DataWorkConnectionFactory
+from client_connection import ClientConnectionFactory
+
 
 COMMAND_PORT = 40118
 CLIENT_PORT = 42118
 DATA_PORT = 41118
 
 class CommandWorkConnection(Protocol):
-    def __init__(self, service):
+    def __init__(self):
         pass
 
     def connectionMade(self):
@@ -30,8 +32,8 @@ class CommandWorkConnectionFactory(ClientFactory):
 
 
 class CommandHomeConnection(Protocol):
-    def __init__(self, connections):
-        pass
+    def __init__(self):
+        reactor.listenTCP(CLIENT_PORT, ClientConnectionFactory(self))
 
     def connectionMade(self):
         pass

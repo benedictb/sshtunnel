@@ -21,7 +21,7 @@ class DataHomeConnection(Protocol):
         self.client.start_forwarding_client_data(self)
 
     def dataReceived(self, data):
-        print 'outgoing:\n' + data
+#        print 'outgoing:\n' + data
         self.client.transport.write(data)
 
 
@@ -36,7 +36,7 @@ class DataHomeConnectionFactory(Factory):
 
 # This is the client for data
 class DataWorkConnection(Protocol):
-    def __init__(self, service):
+    def __init__(self):
         self.q = DeferredQueue()
 
     def connectionMade(self):
@@ -51,8 +51,7 @@ class DataWorkConnection(Protocol):
 
     def forward_data(self, data):
         self.service.transport.write(data)
-        self.queue.get().addCallback(self.forward_data) # Mayhaps this one
-
+        self.q.get().addCallback(self.forward_data) # Mayhaps this one
 
 class DataWorkConnectionFactory(ClientFactory):
     def __init__(self):
