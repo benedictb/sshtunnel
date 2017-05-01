@@ -7,15 +7,22 @@ COMMAND_PORT = 40678
 CLIENT_PORT = 41678
 DATA_PORT = 42678
 
+
 class ServiceConnection(Protocol):
     def __init__(self, connections):
         self.connections = connections
 
     def connectionMade(self):
-        reactor.listenTCP(DATA_PORT, DataHomeConnectionFactory(self.connections))
+        reactor.connectTCP('ash.campus.nd.edu', DATA_PORT, DataHomeConnectionFactory(self.connections))
 
     def dataReceived(self, data):
-        print data
+        self.connections['data'].transport.write(data)
+
+    def start_forwarding_service_data(self):
+        self.q.get().addCallback(self.forward_data)
+
+    def forward_data(self, data):
+        self.connections['data'].transport.write(data)
 
 
 class ServiceConnectionFactory(ClientFactory):

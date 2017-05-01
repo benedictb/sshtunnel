@@ -1,16 +1,31 @@
 from twisted.internet.protocol import Factory
 from twisted.internet.protocol import Protocol
+from twisted.internet.defer import DeferredQueue
+from twisted.internet import reactor
 
+from data_connection import DataHomeConnectionFactory
+
+COMMAND_PORT = 40678
+CLIENT_PORT = 41678
+DATA_PORT = 42678
 
 class ClientConnection(Protocol):
-    def __init__(self):
-        pass
+    def __init__(self, connections):
+        self.connections = connections
+        self.q = DeferredQueue()
 
     def connectionMade(self):
-        pass
+        reactor.listenTCP(DATA_PORT, DataHomeConnectionFactory(self.connections))
+        self.connections['cmd'].transport.write('start data connection')
 
     def dataReceived(self, data):
-        print data
+        self.q.put(data)
+
+    def start_forwarding_client_data(self):
+        self.q.get().addCallback(self.forward_data)
+
+    def forward_data(self, data):
+        self.connections['data'].transport.write(data)
 
 
 class ClientConnectionFactory(Factory):
@@ -19,6 +34,6 @@ class ClientConnectionFactory(Factory):
         self.connections = connections
 
     def buildProtocol(self, addr):
-        c = self.conn()
+        c = self.conn(self.connections)
         self.connections['client'] = c
         return c

@@ -1,10 +1,13 @@
 #! /usr/bin/python
 
 from twisted.internet import reactor
-from service_connection import ServiceConnectionFactory
+from command_connection import CommandWorkConnectionFactory
+
+COMMAND_PORT = 40678
+CLIENT_PORT = 41678
+DATA_PORT = 42678
 
 connections = dict()
-
-reactor.connectTCP('student02.cse.nd.edu', 22, ServiceConnectionFactory(connections))
+reactor.connectTCP('ash.campus.nd.edu', COMMAND_PORT, CommandWorkConnectionFactory(connections))
 reactor.run()
 
