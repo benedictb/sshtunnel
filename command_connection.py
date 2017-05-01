@@ -17,7 +17,7 @@ class CommandWorkConnection(Protocol):
         self.connections = connections
 
     def connectionMade(self):
-        pass
+        print 'command work connection'
 
     def dataReceived(self, data):
         if data == 'start data connection':
@@ -43,7 +43,7 @@ class CommandHomeConnection(Protocol):
         self.connections = connections
 
     def connectionMade(self):
-        pass
+        print 'command home connection made'
 
     def dataReceived(self, data):
         pass
