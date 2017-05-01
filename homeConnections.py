@@ -42,7 +42,7 @@ class DataConnection(Protocol):
 
 class CommandConnection(Protocol):
     def __init__(self):
-        reactor.listenTCP(CLIENT_PORT, GenericFactory(ClientConnection))
+        reactor.listenTCP(CLIENT_PORT, GenericFactory(ClientConnection, self))
 
     def connectionMade(self):
         pass
