@@ -19,10 +19,10 @@ class DataHomeConnection(Protocol):
         self.connections = connections
 
     def connectionMade(self):
-        print 'data home made'
         self.connections['client'].start_forwarding_client_data()
 
     def dataReceived(self, data):
+        print 'outgoing:\n' + data
         self.connections['client'].transport.write(data)
 
 
@@ -50,7 +50,7 @@ class DataWorkConnection(Protocol):
         self.q.put(data)
 
     def start_forwarding_data(self):
-        self.q.addCallback(self.forward_data)
+        self.q.get().addCallback(self.forward_data)
 
     def forward_data(self, data):
         self.connections['service'].transport.write(data)

@@ -1,8 +1,6 @@
 from twisted.internet.protocol import ClientFactory
 from twisted.internet.protocol import Protocol
-from twisted.internet import reactor
 from twisted.internet.defer import DeferredQueue
-from data_connection import DataWorkConnectionFactory
 
 COMMAND_PORT = 40678
 CLIENT_PORT = 41678
