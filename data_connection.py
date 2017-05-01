@@ -1,6 +1,9 @@
 from twisted.internet.protocol import ClientFactory, Factory
 from twisted.internet.protocol import Protocol
 from twisted.internet.defer import DeferredQueue
+from twisted.internet import reactor
+
+from service_connection import ServiceConnectionFactory
 
 # 40678 is for command, 41678 is for client, 42678 is for data (and 2 is for SSH)
 COMMAND_PORT = 40678
@@ -41,10 +44,15 @@ class DataWorkConnection(Protocol):
         self.q = DeferredQueue()
 
     def connectionMade(self):
-        print 'data work made'
-        self.connections['service'].start_forwarding_service_data()
+        reactor.connectTCP('student02.cse.nd.edu', 22, ServiceConnectionFactory(self.connections))
 
     def dataReceived(self, data):
+        self.q.put(data)
+
+    def start_forwarding_data(self):
+        self.q.addCallback(self.forward_data)
+
+    def forward_data(self, data):
         self.connections['service'].transport.write(data)
 
 

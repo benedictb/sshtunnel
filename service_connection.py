@@ -15,16 +15,9 @@ class ServiceConnection(Protocol):
         self.q = DeferredQueue()
         
     def connectionMade(self):
-        reactor.connectTCP('ash.campus.nd.edu', DATA_PORT, DataWorkConnectionFactory(self.connections))
+        self.connections['data'].start_forwarding_data()
 
     def dataReceived(self, data):
-        print data
-        self.q.put(data)
-
-    def start_forwarding_service_data(self):
-        self.q.get().addCallback(self.forward_data)
-
-    def forward_data(self, data):
         self.connections['data'].transport.write(data)
 
 

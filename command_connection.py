@@ -1,7 +1,7 @@
 from twisted.internet.protocol import ClientFactory, Factory
 from twisted.internet.protocol import Protocol
 from twisted.internet import reactor
-from client_connection import ClientConnectionFactory
+from data_connection import DataWorkConnectionFactory
 from service_connection import ServiceConnectionFactory
 
 # 40678 is for command, 41678 is for client, 42678 is for data (and 2 is for SSH)
@@ -21,11 +21,10 @@ class CommandWorkConnection(Protocol):
 
     def dataReceived(self, data):
         if data == 'start data connection':
-            self.start_service_connection()
+            self.start_data_connection()
 
-    def start_service_connection(self):
-        reactor.connectTCP('student02.cse.nd.edu', 22, ServiceConnectionFactory(self.connections))
-
+    def start_data_connection(self):
+        reactor.connectTCP('ash.campus.nd.edu', DATA_PORT, DataWorkConnectionFactory(self.connections))
 
 class CommandWorkConnectionFactory(ClientFactory):
     def __init__(self, connections):
