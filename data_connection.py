@@ -1,8 +1,6 @@
 from twisted.internet.protocol import ClientFactory, Factory
 from twisted.internet.protocol import Protocol
 from twisted.internet.defer import DeferredQueue
-from twisted.internet import reactor
-from client_connection import ClientConnectionFactory
 
 # 40678 is for command, 41678 is for client, 42678 is for data (and 2 is for SSH)
 COMMAND_PORT = 40678
