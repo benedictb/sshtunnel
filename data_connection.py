@@ -16,6 +16,7 @@ class DataHomeConnection(Protocol):
         self.connections = connections
 
     def connectionMade(self):
+        print 'data home made'
         self.connections['client'].start_forwarding_client_data()
 
     def dataReceived(self, data):
@@ -29,7 +30,7 @@ class DataHomeConnectionFactory(Factory):
 
     def buildProtocol(self, addr):
         c = self.conn(self.connections)
-        self.connections['service'] = c
+        self.connections['data'] = c
         return c
 
 
@@ -40,10 +41,11 @@ class DataWorkConnection(Protocol):
         self.q = DeferredQueue()
 
     def connectionMade(self):
+        print 'data work made'
         self.connections['service'].start_forwarding_service_data()
 
     def dataReceived(self, data):
-        self.connections['service'].write(data)
+        self.connections['service'].transport.write(data)
 
 
 
@@ -54,7 +56,7 @@ class DataWorkConnectionFactory(ClientFactory):
 
     def buildProtocol(self, addr):
         c = self.conn(self.connections)
-        self.connections['service'] = c
+        self.connections['data'] = c
         return c
 
 

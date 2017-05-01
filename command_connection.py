@@ -57,7 +57,7 @@ class CommandHomeConnectionFactory(Factory):
     def buildProtocol(self, addr):
         c = self.conn(self.connections)
         self.connections['cmd'] = c
-        return self.conn
+        return c
 
 
 
