@@ -9,7 +9,7 @@ DATA_PORT = 41118
 
 class CommandWorkConnection(Protocol):
     def __init__(self, service):
-        self.service = service
+        pass
 
     def connectionMade(self):
         pass
@@ -19,15 +19,14 @@ class CommandWorkConnection(Protocol):
             self.start_data_connection()
 
     def start_data_connection(self):
-        reactor.connectTCP('ash.campus.nd.edu', DATA_PORT, DataWorkConnectionFactory(self.service))
+        reactor.connectTCP('ash.campus.nd.edu', DATA_PORT, DataWorkConnectionFactory())
 
 class CommandWorkConnectionFactory(ClientFactory):
-    def __init__(self, service):
+    def __init__(self):
         self.conn = CommandWorkConnection
-        self.service = service
 
     def buildProtocol(self, addr):
-        return self.conn(self.service)
+        return self.conn()
 
 
 class CommandHomeConnection(Protocol):
