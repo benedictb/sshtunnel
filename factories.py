@@ -2,7 +2,7 @@ from twisted.internet.protocol import ClientFactory
 from twisted.internet.protocol import Factory
 
 
-class genericClientFactory(ClientFactory):
+class GenericClientFactory(ClientFactory):
     def __init__(self, connection, *args):
         self.connection = connection
         self.args = args
@@ -11,7 +11,7 @@ class genericClientFactory(ClientFactory):
         return self.conn(self.args)
 
 
-class genericFactory(Factory):
+class GenericFactory(Factory):
     def __init__(self, connection, *args):
         self.connection = connection
         self.args = args

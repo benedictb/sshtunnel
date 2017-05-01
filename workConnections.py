@@ -1,7 +1,7 @@
 from twisted.internet.protocol import Protocol
 from twisted.internet.defer import DeferredQueue
 from twisted.internet import reactor
-from factories import genericClientFactory
+from factories import GenericClientFactory
 
 COMMAND_PORT = 40118
 CLIENT_PORT = 42118
@@ -20,12 +20,12 @@ class ServiceConnection(Protocol):
         self.data.transport.write(data)
 
 
-class DataWorkConnection(Protocol):
+class DataConnection(Protocol):
     def __init__(self):
         self.q = DeferredQueue()
 
     def connectionMade(self):
-        reactor.connectTCP('student02.cse.nd.edu', 22, genericClientFactory(ServiceConnection, self))
+        reactor.connectTCP('student02.cse.nd.edu', 22, GenericClientFactory(ServiceConnection, self))
 
     def dataReceived(self, data):
         self.q.put(data)
@@ -38,7 +38,8 @@ class DataWorkConnection(Protocol):
         self.service.transport.write(data)
         self.q.get().addCallback(self.forward_data) # Mayhaps this one
 
-class CommandWorkConnection(Protocol):
+
+class CommandConnection(Protocol):
     def __init__(self):
         pass
 
@@ -50,4 +51,4 @@ class CommandWorkConnection(Protocol):
             self.start_data_connection()
 
     def start_data_connection(self):
-        reactor.connectTCP('ash.campus.nd.edu', DATA_PORT, genericClientFactory(DataWorkConnection))
+        reactor.connectTCP('ash.campus.nd.edu', DATA_PORT, GenericClientFactory(DataConnection))
