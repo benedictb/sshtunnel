@@ -4,9 +4,9 @@ from twisted.internet import reactor
 from client_connection import ClientConnectionFactory
 from command_connection import CommandHomeConnectionFactory
 
-COMMAND_PORT = 40678
-CLIENT_PORT = 41678
-DATA_PORT = 42678
+COMMAND_PORT = 40118
+CLIENT_PORT = 42118
+DATA_PORT = 41118
 
 # home runs on ash
 

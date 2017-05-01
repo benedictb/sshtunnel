@@ -2,9 +2,9 @@ from twisted.internet.protocol import ClientFactory
 from twisted.internet.protocol import Protocol
 from twisted.internet.defer import DeferredQueue
 
-COMMAND_PORT = 40678
-CLIENT_PORT = 41678
-DATA_PORT = 42678
+COMMAND_PORT = 40118
+CLIENT_PORT = 42118
+DATA_PORT = 41118
 
 
 class ServiceConnection(Protocol):

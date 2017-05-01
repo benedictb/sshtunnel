@@ -2,15 +2,10 @@ from twisted.internet.protocol import ClientFactory, Factory
 from twisted.internet.protocol import Protocol
 from twisted.internet import reactor
 from data_connection import DataWorkConnectionFactory
-from service_connection import ServiceConnectionFactory
 
-# 40678 is for command, 41678 is for client, 42678 is for data (and 2 is for SSH)
-COMMAND_PORT = 40678
-CLIENT_PORT = 41678
-DATA_PORT = 42678
-
-# If the work cmd connect receives start data connect, start the service connect
-
+COMMAND_PORT = 40118
+CLIENT_PORT = 42118
+DATA_PORT = 41118
 
 class CommandWorkConnection(Protocol):
     def __init__(self, connections):
