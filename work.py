@@ -10,7 +10,6 @@ DATA_PORT = 41118
 
 # work runs on newt
 
-connections = dict()
-reactor.connectTCP('ash.campus.nd.edu', COMMAND_PORT, CommandWorkConnectionFactory(connections))
+reactor.connectTCP('ash.campus.nd.edu', COMMAND_PORT, CommandWorkConnectionFactory())
 reactor.run()
 

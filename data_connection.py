@@ -14,56 +14,51 @@ DATA_PORT = 41118
 # It waits for the data to come in on Home
 
 class DataHomeConnection(Protocol):
-    def __init__(self, connections):
-        self.connections = connections
+    def __init__(self, client):
+        self.client = client
 
     def connectionMade(self):
-        self.connections['client'].start_forwarding_client_data()
+        self.client.start_forwarding_client_data(self)
 
     def dataReceived(self, data):
         print 'outgoing:\n' + data
-        self.connections['client'].transport.write(data)
+        self.client.transport.write(data)
 
 
 class DataHomeConnectionFactory(Factory):
-    def __init__(self, connections):
+    def __init__(self, client):
         self.conn = DataHomeConnection
-        self.connections = connections
+        self.client = client
 
     def buildProtocol(self, addr):
-        c = self.conn(self.connections)
-        self.connections['data'] = c
-        return c
+        return self.conn(self.client)
 
 
 # This is the client for data
 class DataWorkConnection(Protocol):
-    def __init__(self, connections):
-        self.connections = connections
+    def __init__(self, service):
         self.q = DeferredQueue()
 
     def connectionMade(self):
-        reactor.connectTCP('student02.cse.nd.edu', 22, ServiceConnectionFactory(self.connections))
+        reactor.connectTCP('student02.cse.nd.edu', 22, ServiceConnectionFactory(self))
 
     def dataReceived(self, data):
         self.q.put(data)
 
-    def start_forwarding_data(self):
+    def start_forwarding_data(self, service):
+        self.service = service
         self.q.get().addCallback(self.forward_data)
 
     def forward_data(self, data):
-        self.connections['service'].transport.write(data)
-
+        self.service.transport.write(data)
+        self.queue.get().addCallback(self.forward_data) # Mayhaps this one
 
 
 class DataWorkConnectionFactory(ClientFactory):
-    def __init__(self, connections):
+    def __init__(self):
         self.conn = DataWorkConnection
-        self.connections = connections
 
     def buildProtocol(self, addr):
-        c = self.conn(self.connections)
-        self.connections['data'] = c
-        return c
+        return self.conn()
 
 

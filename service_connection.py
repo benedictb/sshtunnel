@@ -8,23 +8,21 @@ DATA_PORT = 41118
 
 
 class ServiceConnection(Protocol):
-    def __init__(self, connections):
-        self.connections = connections
+    def __init__(self, data):
         self.q = DeferredQueue()
-        
+        self.data = data
+
     def connectionMade(self):
-        self.connections['data'].start_forwarding_data()
+        self.data.start_forwarding_data(self)
 
     def dataReceived(self, data):
-        self.connections['data'].transport.write(data)
+        self.data.transport.write(data)
 
 
 class ServiceConnectionFactory(ClientFactory):
-    def __init__(self, connections):
+    def __init__(self, data):
         self.conn = ServiceConnection
-        self.connections = connections
+        self.data = data
 
     def buildProtocol(self, addr):
-        c = self.conn(self.connections)
-        self.connections['service'] = c
-        return c
+        return self.conn(self.data)
