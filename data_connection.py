@@ -21,7 +21,6 @@ class DataHomeConnection(Protocol):
         self.client.start_forwarding_client_data(self)
 
     def dataReceived(self, data):
-#        print 'outgoing:\n' + data
         self.client.transport.write(data)
 
 

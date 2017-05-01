@@ -19,7 +19,6 @@ class ClientConnection(Protocol):
         self.cmd.transport.write('start data connection')
 
     def dataReceived(self, data):
-        #print 'incoming:\n' + data
         self.q.put(data)
 
     def start_forwarding_client_data(self, data):
